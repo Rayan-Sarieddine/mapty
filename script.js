@@ -11,6 +11,15 @@ const inputDuration = document.querySelector('.form__input--duration');
 const inputCadence = document.querySelector('.form__input--cadence');
 const inputElevation = document.querySelector('.form__input--elevation');
 let map, mapevent;
+class App {
+  constructor() {}
+  _getPosition() {}
+  _loadMap() {}
+  _showForm() {}
+  _toggleElevationField() {}
+  _newWorkout() {}
+}
+
 //geo location api
 if (navigator.geolocation) {
   //if navigator exists
@@ -45,6 +54,11 @@ if (navigator.geolocation) {
 //form event submit
 form.addEventListener('submit', e => {
   e.preventDefault();
+  inputCadence.value =
+    inputDistance.value =
+    inputDuration.value =
+    inputElevation.value =
+      '';
   //get the coord of the clicked point on the map
   const { lat, lng } = mapevent.latlng;
   //put the pin on those coords
@@ -63,4 +77,9 @@ form.addEventListener('submit', e => {
     )
     .setPopupContent('hello')
     .openPopup();
+});
+inputType.addEventListener('change', () => {
+  //making sure one of them is hidden when the other is visible
+  inputElevation.closest('.form__row').classList.toggle('form__row--hidden');
+  inputCadence.closest('.form__row').classList.toggle('form__row--hidden');
 });
