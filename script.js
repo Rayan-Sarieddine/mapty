@@ -12,44 +12,45 @@ const inputCadence = document.querySelector('.form__input--cadence');
 const inputElevation = document.querySelector('.form__input--elevation');
 let map, mapevent;
 class App {
-  constructor() {}
-  _getPosition() {}
-  _loadMap() {}
+  constructor() {
+    this._getPosition(); //get users postion as soon as app class is executed
+  }
+  _getPosition() {
+    //geo location api
+    if (navigator.geolocation) {
+      //if navigator exists
+      navigator.geolocation.getCurrentPosition(this._loadMap, () => {
+        console.log('could not get th eposition');
+      });
+    }
+  }
+  _loadMap(position) {
+    const { latitude, longitude } = position.coords;
+    const coords = [latitude, longitude];
+    const mapi = `https://www.google.com/maps/@${latitude},${longitude}`;
+    console.log(mapi);
+    //show leaflet
+    map = L.map('map').setView(coords, 13); //coords,zoom
+
+    L.tileLayer('https://tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(map);
+
+    //event listener for when map is clicked given by leaflet
+    map.on('click', mape => {
+      //show form on left and focus on imput distance
+      form.classList.remove('hidden');
+      inputDistance.focus();
+      mapevent = mape;
+    });
+  }
   _showForm() {}
   _toggleElevationField() {}
   _newWorkout() {}
 }
-
-//geo location api
-if (navigator.geolocation) {
-  //if navigator exists
-  navigator.geolocation.getCurrentPosition(
-    position => {
-      const { latitude, longitude } = position.coords;
-      const coords = [latitude, longitude];
-      const mapi = `https://www.google.com/maps/@${latitude},${longitude}`;
-      console.log(mapi);
-      //show leaflet
-      map = L.map('map').setView(coords, 13); //coords,zoom
-
-      L.tileLayer('https://tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      }).addTo(map);
-
-      //event listener for when map is clicked given by leaflet
-      map.on('click', mape => {
-        //show form on left and focus on imput distance
-        form.classList.remove('hidden');
-        inputDistance.focus();
-        mapevent = mape;
-      });
-    },
-    () => {
-      console.log('could not get th eposition');
-    }
-  );
-}
+//create and call class(because in constructor we are calling the position, > the position will auto generate)
+const app = new App();
 
 //form event submit
 form.addEventListener('submit', e => {
