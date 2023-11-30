@@ -27,12 +27,16 @@ if (navigator.geolocation) {
         attribution:
           '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       }).addTo(map);
-
-      L.marker(coords)
-        .addTo(map)
-        .bindPopup('A pretty CSS popup.<br> Easily customizable.')
-        .openPopup();
-      //event listener for when map is clicked
+      //event listener for when map is clicked given by leaflet
+      map.on('click', mapevent => {
+        //get the coord of the clicked point on the map
+        const { lat, lng } = mapevent.latlng;
+        //put the pin on those coords
+        L.marker([lat, lng])
+          .addTo(map)
+          .bindPopup('A pretty CSS popup.<br> Easily customizable.')
+          .openPopup();
+      });
     },
     () => {
       console.log('could not get th eposition');
